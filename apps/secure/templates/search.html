@@ -1,0 +1,16 @@
+﻿<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Search (Secure)</title>
+</head>
+<body>
+  <h1>Search (Secure)</h1>
+  <p>Logged in as: {{ user }}</p>
+  <form method="GET" action="/search">
+    <input name="q" value="{{ q }}" />
+    <button type="submit">Search</button>
+  </form>
+  <p>Results for: {{ q }}</p>
+</body>
+</html>
