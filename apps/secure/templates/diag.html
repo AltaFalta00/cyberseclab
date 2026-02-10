@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Diagnostics (Secure)</title>
+</head>
+<body>
+  <h1>Diagnostics (Secure)</h1>
+  <p>Logged in as: {{ user }}</p>
+  <p>This page validates input and executes without a shell.</p>
+  <form method="POST" action="/diag">
+    <label>Target</label>
+    <input name="target" value="{{ target }}" placeholder="localhost" />
+    <button type="submit">Run</button>
+  </form>
+  {% if error %}
+    <p style="color: red">{{ error }}</p>
+  {% endif %}
+  {% if output %}
+    <h2>Output</h2>
+    <pre>{{ output }}</pre>
+  {% endif %}
+  <p><a href="/search">Back to search</a></p>
+</body>
+</html>

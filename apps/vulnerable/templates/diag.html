@@ -1,0 +1,23 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Diagnostics (Vulnerable)</title>
+</head>
+<body>
+  <h1>Diagnostics (Vulnerable)</h1>
+  <p>Logged in as: {{ user }}</p>
+  <p>This page is intentionally vulnerable to command injection.</p>
+  <form method="POST" action="/diag">
+    <label>Target</label>
+    <input name="target" value="{{ target }}" placeholder="localhost" />
+    <button type="submit">Run</button>
+  </form>
+  <p>Try payload: <code>localhost; id</code> (Linux) or <code>localhost &amp; whoami</code> (Windows)</p>
+  {% if output %}
+    <h2>Output</h2>
+    <pre>{{ output }}</pre>
+  {% endif %}
+  <p><a href="/search">Back to search</a></p>
+</body>
+</html>

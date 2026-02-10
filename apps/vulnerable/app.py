@@ -1,4 +1,5 @@
 import os
+import subprocess
 import time
 from flask import Flask, request, make_response, render_template
 from db import init_db, get_db
@@ -69,6 +70,22 @@ def search():
 
     # XSS: reflect query without escaping
     return render_template("search.html", q=q, user=user)
+
+
+@app.route("/diag", methods=["GET", "POST"])
+def diag():
+    sid = request.cookies.get("sid", "")
+    user = SESSIONS.get(sid, {}).get("user", "guest")
+    target = ""
+    output = ""
+
+    if request.method == "POST":
+        target = request.form.get("target", "")
+        # Command injection: user-controlled input in shell command.
+        cmd = f"echo checking {target}"
+        output = subprocess.getoutput(cmd)
+
+    return render_template("diag.html", user=user, target=target, output=output)
 
 
 if __name__ == "__main__":

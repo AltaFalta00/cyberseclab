@@ -1,4 +1,7 @@
 import os
+import re
+import subprocess
+import sys
 from flask import Flask, request, render_template, session, redirect, url_for
 from werkzeug.security import check_password_hash
 from db import init_db, get_db
@@ -37,6 +40,8 @@ app.config["SECRET_KEY"] = load_secret_key()
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
 app.config["SESSION_COOKIE_SECURE"] = os.environ.get("FLASK_ENV", "production").lower() not in ("development", "dev")
+
+ALLOWED_DIAG_TARGET = re.compile(r"^[A-Za-z0-9.\-]{1,64}$")
 
 
 @app.before_request
@@ -78,6 +83,35 @@ def search():
     q = request.args.get("q", "")
     user = session.get("user", "guest")
     return render_template("search.html", q=q, user=user)
+
+
+@app.route("/diag", methods=["GET", "POST"])
+def diag():
+    user = session.get("user", "guest")
+    target = ""
+    output = ""
+    error = ""
+
+    if request.method == "POST":
+        target = request.form.get("target", "")
+        if not ALLOWED_DIAG_TARGET.fullmatch(target):
+            error = "Invalid target. Use letters, digits, dot and hyphen only."
+        else:
+            # No shell interpolation; input is passed as a plain argument.
+            result = subprocess.run(
+                [
+                    sys.executable,
+                    "-c",
+                    "import sys; print('checking ' + sys.argv[1])",
+                    target,
+                ],
+                shell=False,
+                text=True,
+                capture_output=True,
+            )
+            output = (result.stdout or "").strip()
+
+    return render_template("diag.html", user=user, target=target, output=output, error=error)
 
 
 if __name__ == "__main__":

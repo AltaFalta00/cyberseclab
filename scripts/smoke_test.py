@@ -30,6 +30,12 @@ r = c.post('/login', data={'username': 'admin', 'password': 'admin123'}, follow_
 assert r.status_code == 302
 assert r.headers.get('Location') == '/search'
 assert c.get('/search?q=test').status_code == 200
+diag_bad = c.post('/diag', data={'target': 'localhost; id'})
+assert diag_bad.status_code == 200
+assert 'Invalid target' in diag_bad.get_data(as_text=True)
+diag_ok = c.post('/diag', data={'target': 'localhost'})
+assert diag_ok.status_code == 200
+assert 'checking localhost' in diag_ok.get_data(as_text=True)
 """
 
 vulnerable_code = """
@@ -40,6 +46,9 @@ payload = \"' OR '1'='1' -- \"
 r = c.post('/login', data={'username': payload, 'password': 'irrelevant'}, follow_redirects=False)
 assert r.status_code == 200
 assert 'Login ok' in r.get_data(as_text=True)
+diag = c.post('/diag', data={'target': 'localhost; echo ci_lab_marker'})
+assert diag.status_code == 200
+assert 'ci_lab_marker' in diag.get_data(as_text=True)
 """
 
 run("secure smoke", secure_code, ROOT / "apps" / "secure")

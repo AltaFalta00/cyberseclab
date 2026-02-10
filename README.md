@@ -3,7 +3,7 @@
 Small Flask lab to compare intentionally vulnerable code with a safer baseline.
 
 Included:
-- `apps/vulnerable/`: intentionally broken patterns (SQLi, XSS, weak session handling).
+- `apps/vulnerable/`: intentionally broken patterns (SQLi, XSS, command injection, weak session handling).
 - `apps/secure/`: same flow with safer defaults and mitigations.
 - `exploits/`: quick PoCs to demonstrate impact.
 - `writeups/`: short notes per topic.
@@ -47,7 +47,7 @@ This lab is intended for local learning only.
 
 ## Structure
 
-- `apps/vulnerable/`: insecure app with SQLi, XSS, weak session handling.
+- `apps/vulnerable/`: insecure app with SQLi, XSS, command injection, weak session handling.
 - `apps/secure/`: mitigated app with parameterized queries, template escaping, session cookies, password hashing.
 - `exploits/`: PoC scripts.
 - `writeups/`: concise technical writeups.
@@ -64,6 +64,12 @@ This lab is intended for local learning only.
 - `scripts\run_vulnerable.ps1`
 - `scripts\clean.ps1`
 - `scripts\demo.ps1`
+
+If PowerShell script execution is blocked on your machine, use:
+
+```bash
+python scripts/clean.py
+```
 
 ## If you run anything outside localhost
 

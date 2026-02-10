@@ -6,6 +6,16 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
 
 ## Unreleased
 
+### Added
+- New command-injection lab endpoint `/diag` in both apps:
+  - `apps/vulnerable/` intentionally unsafe shell execution.
+  - `apps/secure/` input allowlist + `shell=False`.
+- New templates:
+  - `apps/vulnerable/templates/diag.html`
+  - `apps/secure/templates/diag.html`
+- New exploit PoC: `exploits/command_injection_diag.py`
+- New writeup: `writeups/04-command-injection.md`
+
 ## 0.1.0 - 2026-02-10
 
 ### Fixed
@@ -33,3 +43,4 @@ The format is based on Keep a Changelog and this project follows Semantic Versio
 - Added GitHub Actions CI workflow (`.github/workflows/ci.yml`) for compile and smoke checks.
 - Added issue template and pull request template.
 - Added helper PowerShell scripts in `scripts/`.
+- Added `scripts/clean.py` as execution-policy-safe cleanup fallback.
